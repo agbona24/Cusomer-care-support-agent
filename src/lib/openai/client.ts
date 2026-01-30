@@ -1,9 +1,23 @@
 import OpenAI from 'openai';
 
-export const openai = new OpenAI({
-  apiKey: process.env.OPENAI_API_KEY,
-  timeout: 10000, // 10 second timeout
-});
+// Lazy initialization to avoid build-time errors
+let _openai: OpenAI | null = null;
+
+export function getOpenAI(): OpenAI {
+  if (!_openai) {
+    _openai = new OpenAI({
+      apiKey: process.env.OPENAI_API_KEY,
+      timeout: 10000, // 10 second timeout
+    });
+  }
+  return _openai;
+}
+
+// For backward compatibility
+export const openai = {
+  get chat() { return getOpenAI().chat; },
+  get audio() { return getOpenAI().audio; },
+};
 
 // Helper to get upcoming dates for reference
 function getUpcomingDates(): string {

@@ -1,4 +1,4 @@
-import { openai } from './client';
+import { getOpenAI } from './client';
 import * as fs from 'fs';
 import { tmpdir } from 'os';
 import { join } from 'path';
@@ -12,7 +12,7 @@ export async function speechToText(audioBuffer: Buffer): Promise<string> {
   try {
     fs.writeFileSync(tempPath, audioBuffer);
     
-    const transcription = await openai.audio.transcriptions.create({
+    const transcription = await getOpenAI().audio.transcriptions.create({
       file: fs.createReadStream(tempPath),
       model: 'whisper-1',
       language: 'en',
@@ -31,7 +31,7 @@ export async function speechToText(audioBuffer: Buffer): Promise<string> {
 
 // Convert text to speech using OpenAI TTS
 export async function textToSpeech(text: string): Promise<Buffer> {
-  const response = await openai.audio.speech.create({
+  const response = await getOpenAI().audio.speech.create({
     model: 'tts-1',
     voice: 'nova', // Friendly female voice, good for customer service
     input: text,
