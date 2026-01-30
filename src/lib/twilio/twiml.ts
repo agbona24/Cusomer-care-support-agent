@@ -1,7 +1,8 @@
 import twilio from 'twilio';
 const { VoiceResponse } = twilio.twiml;
 
-const APP_URL = process.env.NEXT_PUBLIC_APP_URL || 'http://localhost:3000';
+// Use APP_URL (runtime) or NEXT_PUBLIC_APP_URL (build-time) or fallback
+const APP_URL = process.env.APP_URL || process.env.NEXT_PUBLIC_APP_URL || 'http://localhost:3000';
 
 // Generate greeting TwiML for incoming calls
 export function generateGreetingTwiml(): string {
