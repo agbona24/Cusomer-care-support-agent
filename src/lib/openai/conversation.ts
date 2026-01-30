@@ -150,10 +150,11 @@ async function handleFunctionCall(
 
       case 'book_appointment': {
         const phoneNumber = (args.phone_number as string) || callerPhoneNumber;
+        const patientName = (args.patient_name as string) || 'Valued Customer';
         console.log(`📝 Booking: ${args.date} at ${args.time} for ${args.service_type}`);
         
         // Find or create patient
-        const nameParts = ((args.patient_name as string) || '').split(' ');
+        const nameParts = patientName.split(' ');
         await findOrCreatePatient(phoneNumber, {
           firstName: nameParts[0],
           lastName: nameParts.slice(1).join(' '),
@@ -166,7 +167,19 @@ async function handleFunctionCall(
           serviceType: args.service_type as string,
         });
 
-        return `Appointment booked successfully! Confirmation #${appointment.id} for ${args.service_type} on ${args.date} at ${args.time}.`;
+        // Send confirmation via SMS (async, don't wait)
+        import('../twilio/messaging').then(({ sendAppointmentConfirmation }) => {
+          sendAppointmentConfirmation({
+            patientName: nameParts[0],
+            phoneNumber,
+            date: args.date as string,
+            time: args.time as string,
+            serviceType: args.service_type as string,
+            confirmationId: appointment.id,
+          }).catch(err => console.error('Failed to send confirmation:', err));
+        });
+
+        return `Appointment booked successfully! Confirmation #${appointment.id} for ${args.service_type} on ${args.date} at ${args.time}. I'll send you a confirmation text message shortly.`;
       }
 
       case 'get_patient_appointments': {

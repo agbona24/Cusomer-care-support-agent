@@ -24,7 +24,7 @@ export function generateGreetingTwiml(): string {
       voice: 'Polly.Joanna',
       language: 'en-US',
     },
-    'Hello and welcome to Smile Dental Clinic! My name is Sarah. How may I help you today?'
+    'Hello and welcome to Smile Dental Clinic! My name is Sarah. Please, what is your name and how may I help you today?'
   );
 
   // If no input, prompt again
