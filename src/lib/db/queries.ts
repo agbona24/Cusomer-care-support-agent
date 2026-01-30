@@ -1,6 +1,6 @@
 import { db } from './index';
 import { appointments, patients } from './schema';
-import { eq, and, gte, lte } from 'drizzle-orm';
+import { eq, and, gte } from 'drizzle-orm';
 import type { NewAppointment, NewPatient } from './schema';
 
 // ============ PATIENT OPERATIONS ============
@@ -10,11 +10,10 @@ export async function findOrCreatePatient(phoneNumber: string, data?: Partial<Ne
   const existing = await db
     .select()
     .from(patients)
-    .where(eq(patients.phoneNumber, phoneNumber))
-    .get();
+    .where(eq(patients.phoneNumber, phoneNumber));
 
-  if (existing) {
-    return existing;
+  if (existing.length > 0) {
+    return existing[0];
   }
 
   // Create new patient
@@ -24,19 +23,18 @@ export async function findOrCreatePatient(phoneNumber: string, data?: Partial<Ne
       phoneNumber,
       ...data,
     })
-    .returning()
-    .get();
+    .returning();
 
-  return result;
+  return result[0];
 }
 
 export async function updatePatient(phoneNumber: string, data: Partial<NewPatient>) {
-  return await db
+  const result = await db
     .update(patients)
     .set({ ...data, updatedAt: new Date().toISOString() })
     .where(eq(patients.phoneNumber, phoneNumber))
-    .returning()
-    .get();
+    .returning();
+  return result[0];
 }
 
 // ============ APPOINTMENT OPERATIONS ============
@@ -70,8 +68,7 @@ export async function getAvailableSlots(date: string): Promise<string[]> {
         eq(appointments.appointmentDate, date),
         eq(appointments.status, 'scheduled')
       )
-    )
-    .all();
+    );
 
   const bookedTimes = new Set(bookedAppointments.map(a => a.time));
   
@@ -89,10 +86,9 @@ export async function bookAppointment(data: NewAppointment) {
   const result = await db
     .insert(appointments)
     .values(data)
-    .returning()
-    .get();
+    .returning();
 
-  return result;
+  return result[0];
 }
 
 export async function getPatientAppointments(phoneNumber: string) {
@@ -108,8 +104,7 @@ export async function getPatientAppointments(phoneNumber: string) {
         eq(appointments.status, 'scheduled')
       )
     )
-    .orderBy(appointments.appointmentDate, appointments.appointmentTime)
-    .all();
+    .orderBy(appointments.appointmentDate, appointments.appointmentTime);
 }
 
 export async function rescheduleAppointment(
@@ -124,7 +119,7 @@ export async function rescheduleAppointment(
     throw new Error(`The ${newTime} slot on ${newDate} is not available`);
   }
 
-  return await db
+  const result = await db
     .update(appointments)
     .set({
       appointmentDate: newDate,
@@ -132,26 +127,29 @@ export async function rescheduleAppointment(
       updatedAt: new Date().toISOString(),
     })
     .where(eq(appointments.id, appointmentId))
-    .returning()
-    .get();
+    .returning();
+    
+  return result[0];
 }
 
 export async function cancelAppointment(appointmentId: number) {
-  return await db
+  const result = await db
     .update(appointments)
     .set({
       status: 'cancelled',
       updatedAt: new Date().toISOString(),
     })
     .where(eq(appointments.id, appointmentId))
-    .returning()
-    .get();
+    .returning();
+    
+  return result[0];
 }
 
 export async function getAppointmentById(appointmentId: number) {
-  return await db
+  const result = await db
     .select()
     .from(appointments)
-    .where(eq(appointments.id, appointmentId))
-    .get();
+    .where(eq(appointments.id, appointmentId));
+    
+  return result[0];
 }

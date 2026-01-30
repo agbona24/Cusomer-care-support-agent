@@ -1,5 +1,5 @@
 import { openai } from './client';
-import { writeFile, unlink } from 'fs/promises';
+import * as fs from 'fs';
 import { tmpdir } from 'os';
 import { join } from 'path';
 import { randomUUID } from 'crypto';
@@ -10,10 +10,10 @@ export async function speechToText(audioBuffer: Buffer): Promise<string> {
   const tempPath = join(tmpdir(), `audio-${randomUUID()}.webm`);
   
   try {
-    await writeFile(tempPath, audioBuffer);
+    fs.writeFileSync(tempPath, audioBuffer);
     
     const transcription = await openai.audio.transcriptions.create({
-      file: new File([audioBuffer], 'audio.webm', { type: 'audio/webm' }),
+      file: fs.createReadStream(tempPath),
       model: 'whisper-1',
       language: 'en',
     });
@@ -22,7 +22,7 @@ export async function speechToText(audioBuffer: Buffer): Promise<string> {
   } finally {
     // Clean up temp file
     try {
-      await unlink(tempPath);
+      fs.unlinkSync(tempPath);
     } catch {
       // Ignore cleanup errors
     }
