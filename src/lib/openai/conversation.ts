@@ -244,9 +244,9 @@ async function processConversationInternal(
   callerPhoneNumber: string,
   startTime: number
 ): Promise<string> {
-  // Add system prompt if not present
+  // Add system prompt with caller's phone number
   const conversationMessages: OpenAI.Chat.ChatCompletionMessageParam[] = [
-    { role: 'system', content: getSystemPrompt() },
+    { role: 'system', content: getSystemPrompt(callerPhoneNumber) },
     ...messages.map(m => ({
       role: m.role as 'user' | 'assistant',
       content: m.content,

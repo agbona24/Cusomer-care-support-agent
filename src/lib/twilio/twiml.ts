@@ -13,7 +13,7 @@ export function generateGreetingTwiml(): string {
     input: ['speech'],
     action: `${APP_URL}/api/twilio/process`,
     method: 'POST',
-    speechTimeout: '2',  // Respond 2 seconds after user stops talking
+    speechTimeout: '1',  // Respond 1 second after user stops talking for faster response
     speechModel: 'phone_call',
     enhanced: true,
     language: 'en-US',
@@ -24,7 +24,7 @@ export function generateGreetingTwiml(): string {
       voice: 'Polly.Joanna',
       language: 'en-US',
     },
-    'Thank you for calling Smile Dental Clinic. My name is Sarah, how can I help you today?'
+    'Hello and welcome to Smile Dental Clinic! My name is Sarah. How may I help you today?'
   );
 
   // If no input, prompt again
@@ -51,7 +51,7 @@ export function generateResponseTwiml(responseText: string, isComplete: boolean 
         voice: 'Polly.Joanna',
         language: 'en-US',
       },
-      'Thank you for calling Smile Dental Clinic. Have a great day! Goodbye.'
+      'Thank you so much for calling Smile Dental Clinic. We look forward to seeing you! Take care and have a lovely day!'
     );
     response.hangup();
   } else {
@@ -60,7 +60,7 @@ export function generateResponseTwiml(responseText: string, isComplete: boolean 
       input: ['speech'],
       action: `${APP_URL}/api/twilio/process`,
       method: 'POST',
-      speechTimeout: '2',  // Respond 2 seconds after user stops talking
+      speechTimeout: '1',  // Respond 1 second after user stops talking for faster response
       speechModel: 'phone_call',
       enhanced: true,
       language: 'en-US',
