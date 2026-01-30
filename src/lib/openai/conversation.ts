@@ -167,19 +167,19 @@ async function handleFunctionCall(
           serviceType: args.service_type as string,
         });
 
-        // Send confirmation via SMS (async, don't wait)
-        import('../twilio/messaging').then(({ sendAppointmentConfirmation }) => {
-          sendAppointmentConfirmation({
-            patientName: nameParts[0],
-            phoneNumber,
-            date: args.date as string,
-            time: args.time as string,
-            serviceType: args.service_type as string,
-            confirmationId: appointment.id,
-          }).catch(err => console.error('Failed to send confirmation:', err));
-        });
+        // SMS confirmation disabled for now - uncomment to enable
+        // import('../twilio/messaging').then(({ sendAppointmentConfirmation }) => {
+        //   sendAppointmentConfirmation({
+        //     patientName: nameParts[0],
+        //     phoneNumber,
+        //     date: args.date as string,
+        //     time: args.time as string,
+        //     serviceType: args.service_type as string,
+        //     confirmationId: appointment.id,
+        //   }).catch(err => console.error('Failed to send confirmation:', err));
+        // });
 
-        return `Appointment booked successfully! Confirmation #${appointment.id} for ${args.service_type} on ${args.date} at ${args.time}. I'll send you a confirmation text message shortly.`;
+        return `Appointment booked successfully! Your confirmation number is ${appointment.id} for ${args.service_type} on ${args.date} at ${args.time}. We look forward to seeing you!`;
       }
 
       case 'get_patient_appointments': {

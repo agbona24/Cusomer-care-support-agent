@@ -21,8 +21,8 @@ export function generateGreetingTwiml(): string {
 
   gather.say(
     {
-      voice: 'Polly.Joanna',
-      language: 'en-US',
+      voice: 'Polly.Amy',
+      language: 'en-GB',
     },
     'Hello and welcome to Smile Dental Clinic! My name is Sarah. Please, what is your name and how may I help you today?'
   );
@@ -41,15 +41,15 @@ export function generateResponseTwiml(responseText: string, isComplete: boolean 
     // End the call after final message
     response.say(
       {
-        voice: 'Polly.Joanna',
-        language: 'en-US',
+        voice: 'Polly.Amy',
+        language: 'en-GB',
       },
       responseText
     );
     response.say(
       {
-        voice: 'Polly.Joanna',
-        language: 'en-US',
+        voice: 'Polly.Amy',
+        language: 'en-GB',
       },
       'Thank you so much for calling Smile Dental Clinic. We look forward to seeing you! Take care and have a lovely day!'
     );
@@ -68,8 +68,8 @@ export function generateResponseTwiml(responseText: string, isComplete: boolean 
 
     gather.say(
       {
-        voice: 'Polly.Joanna',
-        language: 'en-US',
+        voice: 'Polly.Amy',
+        language: 'en-GB',
       },
       responseText
     );
@@ -77,8 +77,8 @@ export function generateResponseTwiml(responseText: string, isComplete: boolean 
     // If no input, ask if they're still there
     response.say(
       {
-        voice: 'Polly.Joanna',
-        language: 'en-US',
+        voice: 'Polly.Amy',
+        language: 'en-GB',
       },
       "I'm sorry, I didn't hear anything. Are you still there?"
     );
@@ -104,8 +104,8 @@ export function generateOutboundCallTwiml(message: string): string {
 
   gather.say(
     {
-      voice: 'Polly.Joanna',
-      language: 'en-US',
+      voice: 'Polly.Amy',
+      language: 'en-GB',
     },
     message
   );
