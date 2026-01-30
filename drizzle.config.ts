@@ -3,9 +3,9 @@ import type { Config } from 'drizzle-kit';
 export default {
   schema: './src/lib/db/schema.ts',
   out: './drizzle',
-  dialect: 'sqlite',
-  driver: 'better-sqlite',
+  dialect: 'turso',
   dbCredentials: {
-    url: './dental-agent.db',
+    url: process.env.TURSO_DATABASE_URL || 'file:./dental-agent.db',
+    authToken: process.env.TURSO_AUTH_TOKEN,
   },
 } satisfies Config;
