@@ -13,10 +13,10 @@ export function generateGreetingTwiml(): string {
     input: ['speech'],
     action: `${APP_URL}/api/twilio/process`,
     method: 'POST',
-    speechTimeout: '1',  // Respond 1 second after user stops talking for faster response
-    speechModel: 'phone_call',
+    speechTimeout: 'auto',  // Auto-detect when user stops talking (fastest)
+    speechModel: 'experimental_conversations',  // Best for back-and-forth conversation
     enhanced: true,
-    language: 'en-US',
+    language: 'en-NG',  // Nigerian English for better accent recognition
   });
 
   gather.say(
@@ -60,10 +60,10 @@ export function generateResponseTwiml(responseText: string, isComplete: boolean 
       input: ['speech'],
       action: `${APP_URL}/api/twilio/process`,
       method: 'POST',
-      speechTimeout: '1',  // Respond 1 second after user stops talking for faster response
-      speechModel: 'phone_call',
+      speechTimeout: 'auto',  // Auto-detect when user stops talking (fastest)
+      speechModel: 'experimental_conversations',  // Best for back-and-forth conversation
       enhanced: true,
-      language: 'en-US',
+      language: 'en-NG',  // Nigerian English for better accent recognition
     });
 
     gather.say(
@@ -96,10 +96,10 @@ export function generateOutboundCallTwiml(message: string): string {
     input: ['speech'],
     action: `${APP_URL}/api/twilio/process`,
     method: 'POST',
-    speechTimeout: 'auto',
-    speechModel: 'phone_call',
+    speechTimeout: 'auto',  // Auto-detect when user stops talking
+    speechModel: 'experimental_conversations',  // Best for conversation
     enhanced: true,
-    language: 'en-US',
+    language: 'en-NG',  // Nigerian English
   });
 
   gather.say(
