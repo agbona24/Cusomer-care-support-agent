@@ -8,17 +8,15 @@ const APP_URL = process.env.APP_URL || process.env.NEXT_PUBLIC_APP_URL || 'http:
 export function generateGreetingTwiml(): string {
   const response = new VoiceResponse();
   
-  // Play greeting and gather speech input with BARGE-IN enabled
+  // Play greeting and gather speech input
   const gather = response.gather({
     input: ['speech'],
     action: `${APP_URL}/api/twilio/process`,
     method: 'POST',
-    speechTimeout: 'auto',
-    speechModel: 'experimental_conversations',
+    speechTimeout: 'auto',  // Auto-detect when user stops talking (fastest)
+    speechModel: 'experimental_conversations',  // Best for back-and-forth conversation
     enhanced: true,
-    language: 'en-NG',
-    bargeIn: true,  // Allow caller to interrupt immediately
-    actionOnEmptyResult: true,  // Process even on silence (faster loop)
+    language: 'en-NG',  // Nigerian English for better accent recognition
   });
 
   gather.say(
@@ -57,17 +55,15 @@ export function generateResponseTwiml(responseText: string, isComplete: boolean 
     );
     response.hangup();
   } else {
-    // Continue conversation with BARGE-IN enabled
+    // Continue conversation
     const gather = response.gather({
       input: ['speech'],
       action: `${APP_URL}/api/twilio/process`,
       method: 'POST',
-      speechTimeout: 'auto',
-      speechModel: 'experimental_conversations',
+      speechTimeout: 'auto',  // Auto-detect when user stops talking (fastest)
+      speechModel: 'experimental_conversations',  // Best for back-and-forth conversation
       enhanced: true,
-      language: 'en-NG',
-      bargeIn: true,  // Allow caller to interrupt immediately
-      actionOnEmptyResult: true,  // Process even on silence
+      language: 'en-NG',  // Nigerian English for better accent recognition
     });
 
     gather.say(
@@ -78,13 +74,13 @@ export function generateResponseTwiml(responseText: string, isComplete: boolean 
       responseText
     );
 
-    // If no input, short prompt
+    // If no input, ask if they're still there
     response.say(
       {
         voice: 'Polly.Amy',
         language: 'en-GB',
       },
-      "Are you there?"
+      "I'm sorry, I didn't hear anything. Are you still there?"
     );
     response.redirect(`${APP_URL}/api/twilio/voice`);
   }
@@ -100,12 +96,10 @@ export function generateOutboundCallTwiml(message: string): string {
     input: ['speech'],
     action: `${APP_URL}/api/twilio/process`,
     method: 'POST',
-    speechTimeout: 'auto',
-    speechModel: 'experimental_conversations',
+    speechTimeout: 'auto',  // Auto-detect when user stops talking
+    speechModel: 'experimental_conversations',  // Best for conversation
     enhanced: true,
-    language: 'en-NG',
-    bargeIn: true,  // Allow interrupt
-    actionOnEmptyResult: true,
+    language: 'en-NG',  // Nigerian English
   });
 
   gather.say(
