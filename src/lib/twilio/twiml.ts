@@ -8,15 +8,17 @@ const APP_URL = process.env.APP_URL || process.env.NEXT_PUBLIC_APP_URL || 'http:
 export function generateGreetingTwiml(): string {
   const response = new VoiceResponse();
   
-  // Play greeting and gather speech input
+  // Play greeting and gather speech input with BARGE-IN enabled
   const gather = response.gather({
     input: ['speech'],
     action: `${APP_URL}/api/twilio/process`,
     method: 'POST',
-    speechTimeout: 'auto',  // Auto-detect when user stops talking (fastest)
-    speechModel: 'experimental_conversations',  // Best for back-and-forth conversation
+    speechTimeout: 'auto',
+    speechModel: 'experimental_conversations',
     enhanced: true,
-    language: 'en-NG',  // Nigerian English for better accent recognition
+    language: 'en-NG',
+    bargeIn: true,  // Allow caller to interrupt immediately
+    actionOnEmptyResult: true,  // Process even on silence (faster loop)
   });
 
   gather.say(
@@ -55,15 +57,17 @@ export function generateResponseTwiml(responseText: string, isComplete: boolean 
     );
     response.hangup();
   } else {
-    // Continue conversation
+    // Continue conversation with BARGE-IN enabled
     const gather = response.gather({
       input: ['speech'],
       action: `${APP_URL}/api/twilio/process`,
       method: 'POST',
-      speechTimeout: 'auto',  // Auto-detect when user stops talking (fastest)
-      speechModel: 'experimental_conversations',  // Best for back-and-forth conversation
+      speechTimeout: 'auto',
+      speechModel: 'experimental_conversations',
       enhanced: true,
-      language: 'en-NG',  // Nigerian English for better accent recognition
+      language: 'en-NG',
+      bargeIn: true,  // Allow caller to interrupt immediately
+      actionOnEmptyResult: true,  // Process even on silence
     });
 
     gather.say(
@@ -74,13 +78,13 @@ export function generateResponseTwiml(responseText: string, isComplete: boolean 
       responseText
     );
 
-    // If no input, ask if they're still there
+    // If no input, short prompt
     response.say(
       {
         voice: 'Polly.Amy',
         language: 'en-GB',
       },
-      "I'm sorry, I didn't hear anything. Are you still there?"
+      "Are you there?"
     );
     response.redirect(`${APP_URL}/api/twilio/voice`);
   }
@@ -96,10 +100,12 @@ export function generateOutboundCallTwiml(message: string): string {
     input: ['speech'],
     action: `${APP_URL}/api/twilio/process`,
     method: 'POST',
-    speechTimeout: 'auto',  // Auto-detect when user stops talking
-    speechModel: 'experimental_conversations',  // Best for conversation
+    speechTimeout: 'auto',
+    speechModel: 'experimental_conversations',
     enhanced: true,
-    language: 'en-NG',  // Nigerian English
+    language: 'en-NG',
+    bargeIn: true,  // Allow interrupt
+    actionOnEmptyResult: true,
   });
 
   gather.say(
