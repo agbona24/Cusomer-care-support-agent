@@ -24,7 +24,7 @@ export function generateGreetingTwiml(): string {
       voice: 'Polly.Amy',
       language: 'en-GB',
     },
-    'Hello and welcome to Smile Dental Clinic! My name is Sarah. Please, what is your name and how may I help you today?'
+    'Smile Dental Clinic, this is Sarah. How can I help you today?'
   );
 
   // If no input, prompt again
@@ -51,7 +51,7 @@ export function generateResponseTwiml(responseText: string, isComplete: boolean 
         voice: 'Polly.Amy',
         language: 'en-GB',
       },
-      'Thank you so much for calling Smile Dental Clinic. We look forward to seeing you! Take care and have a lovely day!'
+      'Thanks for calling! See you soon, bye!'
     );
     response.hangup();
   } else {
