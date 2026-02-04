@@ -272,8 +272,8 @@ async function processConversationInternal(
     messages: conversationMessages,
     tools,
     tool_choice: 'auto',
-    temperature: 0.5, // Lower = more focused, faster
-    max_tokens: 60, // Ultra short for instant voice
+    temperature: 0.8, // More natural, human-like variation
+    max_tokens: 200, // Allow natural conversation length
   });
   
   console.log(`⏱️ First OpenAI call: ${Date.now() - startTime}ms`);
@@ -313,8 +313,8 @@ async function processConversationInternal(
       assistantMessage,
       ...toolResults,
     ],
-    temperature: 0.5,
-    max_tokens: 60, // Ultra short for instant voice
+    temperature: 0.8,
+    max_tokens: 200, // Natural conversation length
   });
 
   console.log(`⏱️ Total AI processing: ${Date.now() - startTime}ms`);
